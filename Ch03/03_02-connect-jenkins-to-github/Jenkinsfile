@@ -1,5 +1,15 @@
+#!/usr/bin/env groovy
+@Library('SPS_Library') _
+import sps.Utilities
+
 pipeline {
-    agent any
+    agent {
+    kubernetes {
+      inheritFrom 'k8s-build'
+      yaml cciContainers([[name: "sps-build", image: "sps-docker-releases.${ARTIFACTORY_FQDN}/sps_builder_rhel73:19.3.1"]])
+      nodeSelector 'build-duration=long'
+    }
+  }
 
     // this section configures Jenkins options
     options {
